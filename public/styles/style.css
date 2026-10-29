@@ -6,6 +6,7 @@
   --bg:           #f5f4f0;
   --surface:      #ffffff;
   --border:       rgba(0, 0, 0, 0.2);
+  --border-strong: rgba(0, 0, 0, 0.3);   /* was used but never defined */
   --text:         #1a1a1a;
   --text-muted:   #6b6b6b;
   --text-faint:   #a0a0a0;
@@ -14,38 +15,34 @@
   --accent-light: #a4e7c8;
   --accent-dark:  #3c926a;
 
-  --accent2: #e07b39;
-  --accent2-light: #f5c9a0;
-  --accent2-dark: #b5612c;
-
   --danger:       #A32D2D;
   --radius:       10px;
   --radius-sm:    6px;
   --focus-ring:   0 0 0 3px rgba(72, 180, 130, 0.15);
 }
+
 [data-theme="dark"] {
-  --bg:           #1a1c1b;   /* warm dark, echoes the greenish tint */
-  --surface:      #2b2e2c;  /* slightly lighter than bg */
+  --bg:           #1a1c1b;
+  --surface:      #2b2e2c;
   --border:       rgba(255, 255, 255, 0.08);
-  --text:         #e8e6e1;   /* warm off-white, mirrors --bg warmth */
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --text:         #e8e6e1;
   --text-muted:   #8f9490;
   --text-faint:   #848f89;
 
-  --accent:       #48b482;   /* unchanged */
-  --accent-light: #1e4a36;   /* darkened for backgrounds, not text */
-  --accent-dark:  #6dcfa0;   /* flipped — lighter for dark bg hover states */
+  --accent:       #48b482;
+  --accent-light: #1e4a36;
+  --accent-dark:  #6dcfa0;
 
-  --accent2:       #e07b39;
-  --accent2-light: #7a3d18;
-  --accent2-dark:  #f5c9a0;
-
-  --danger:       #e05555;   /* brightened so it's visible on dark */
+  --danger:       #e05555;
   --focus-ring:   0 0 0 3px rgba(72, 180, 130, 0.25);
-
-  .cal-icon {
-      filter: invert(52%) sepia(50%) saturate(400%) hue-rotate(110deg);
-  }
 }
+
+/* moved out of the variables block so it is a normal rule */
+[data-theme="dark"] .cal-icon {
+  filter: invert(52%) sepia(50%) saturate(400%) hue-rotate(110deg);
+}
+
 /* ─── Base ────────────────────────────────────────────────────────────────── */
 
 body {
@@ -60,42 +57,6 @@ body {
   max-width: 700px;
   margin: 0 auto;
 }
-
-.card {
-  background: var(--surface);
-  border: 0.5px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-  margin-bottom: 1.25rem;
-}
-
-/* ─── Tables ─────────────────────────────────────────────────────────────── */
-
-.data-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-}
-
-.data-table th,
-.data-table td {
-    padding: 8px 12px;
-    border-bottom: 1px solid #ddd;
-}
-
-/* History page: scrollable list with a header that stays visible */
-.history-list {
-    max-height: 70vh;      /* or a fixed height like 400px */
-    overflow-y: auto;
-}
-
-.history-list .data-table th {
-    position: sticky;
-    top: 0;
-    background: #fff;      /* needed so rows don't show through */
-}
-
-
 
 /* ─── Top bar ─────────────────────────────────────────────────────────────── */
 
@@ -121,218 +82,199 @@ body {
   transition: background 0.1s, color 0.1s;
 }
 
-.top-btn:hover           { background: var(--border); color: var(--text); }
-.top-btn.danger:hover    { color: var(--danger); border-color: var(--danger); background: none; }
+.top-btn:hover { background: var(--border); color: var(--text); }
 
-/* ─── Header ─────────────────────────────────────────────────────────────── */
+/* ─── Pages ───────────────────────────────────────────────────────────────── */
 
-header {
-  margin-bottom: 2rem;
-}
+.recent-history { margin-bottom: 1.5rem; }
 
-header h1 {
-  font-size: 22px;
-  font-weight: 500;
-  letter-spacing: -0.3px;
-}
+/* ─── Data table (new) ────────────────────────────────────────────────────── */
 
-header p {
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
   font-size: 14px;
-  color: var(--text-muted);
-  margin-top: 4px;
-}
-
-/* ─── Lock Screen ────────────────────────────────────────────────────────── */
-
-.lock-screen {
-    position: fixed; inset: 0; background: var(--bg);
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    z-index: 9999;
-}
-
-.lock-box {
-    background: var(--surface); border: 0.5px solid var(--border);
-    border-radius: 12px; padding: 2rem; width: 320px; text-align: center;
-}
-.lock-box h2 { font-size: 17px; font-weight: 500; margin-bottom: 6px; color: var(--text); }
-.lock-box p { font-size: 13px; color: var(--text-muted); margin-bottom: 1.25rem; }
-.lock-box input {
-    width: 100%; padding: 9px 12px; border-radius: 6px; font-size: 14px;
-    border: 0.5px solid var(--border); background: var(--bg);
-    font-family: inherit; margin-bottom: 10px; text-align: center;
-    letter-spacing: 2px;
-    color: var(--text);
-}
-.lock-box input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--focus-ring); }
-
-.lock-box input::placeholder { color: var(--text-faint); }
-
-.lock-btn {
-    width: 100%; padding: 9px; border-radius: 6px; border: none;
-    background: var(--accent); color: white; font-size: 14px; font-family: inherit;
-    font-weight: 500; cursor: pointer;
-}
-.lock-btn:hover { background: var(--accent-dark); }
-
-.lock-error { font-size: 12px; color: var(--danger); margin-top: 8px; display: none; }
-
-
-.nav-btn, 
-.today-btn,
-.year-nav {
-  background: none;
+  background: var(--surface);
   border: 0.5px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 6px 14px;
-  cursor: pointer;
-  font-size: 14px;
-  color: var(--text-muted);
-  font-family: inherit;
-  transition: background 0.1s;
+  border-radius: var(--radius);
+  overflow: hidden;
 }
 
-.nav-btn:hover { background: var(--bg); }
+.data-table th,
+.data-table td {
+  padding: 10px 14px;
+  text-align: left;
+}
 
-
-/* ─── Bookings list ───────────────────────────────────────────────────────── */
-
-.edit-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
+.data-table th {
+  font-size: 11px;
+  font-weight: 500;
   color: var(--text-faint);
-  font-size: 18px;
-  padding: 4px 6px;
-  border-radius: var(--radius-sm);
-  line-height: 1;
-  transition: color 0.1s, background 0.1s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 0.5px solid var(--border);
 }
 
-.edit-btn:hover { color: var(--accent); background: white; }
+.data-table tbody tr + tr td { border-top: 0.5px solid var(--border); }
+.data-table tbody tr:hover   { background: var(--bg); }
 
-.delete-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: var(--text-faint);
-  font-size: 18px;
-  padding: 4px 6px;
-  border-radius: var(--radius-sm);
-  line-height: 1;
-  transition: color 0.1s, background 0.1s;
+/* ─── Add form ────────────────────────────────────────────────────────────── */
+
+.add-container {
+  position: relative;          /* anchors the dropdown and the icon */
 }
 
-.delete-btn:hover { color: var(--danger); background: white; }
-
-
-/* ─── Booking form ────────────────────────────────────────────────────────── */
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 12px;
+.add-container h3 {
+  font-size: 15px;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
+.add-container .plain-input { margin-bottom: 8px; }
+.add-container .plain-input:last-of-type { margin-bottom: 0; }
 
-.form-group label {
-  font-size: 12px;
-  color: var(--text-muted);
-  letter-spacing: 0.2px;
-}
-
-.form-group input,
 .plain-input {
+  width: 100%;
   font-size: 14px;
   font-family: inherit;
-  padding: 8px 11px;
-  border-radius: var(--radius-sm);
+  padding: 8px 36px 8px 11px;  /* right padding leaves room for the icon */
+  border-radius: var(--radius);
   border: 0.5px solid var(--border);
   background: var(--bg);
   color: var(--text);
   transition: border-color 0.15s, box-shadow 0.15s;
 }
 
-.plain-input { border-radius: var(--radius); width: 100%; }
+#inputF { cursor: pointer; }
 
-.form-group input:focus,
-.plain-input:focus {
+.plain-input:focus,
+.plain-input.picker-input-active {
   outline: none;
   border-color: var(--accent);
   box-shadow: var(--focus-ring);
 }
 
+/* sits over the last input (#inputF) in the container */
+.cal-icon {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  width: 16px;
+  height: 16px;
+  opacity: 0.5;
+  pointer-events: none;
+}
 
-.error {
-  color: var(--danger);
-  font-size: 12px;
-  margin-top: 8px;
+/* ─── Mini calendar ───────────────────────────────────────────────────────── */
+
+.picker-dropdown {
   display: none;
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 260px;
+  padding: 12px;
+  background: var(--surface);
+  border: 0.5px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  z-index: 999;
 }
 
+.picker-dropdown.open { display: block; }
 
-
-/* ─── Modal ──────────────────────────────────────────────────────────────── */
-
-.modal-overlay {
-    position: fixed; inset: 0;
-    background: rgba(0,0,0,0.3);
-    display: flex; align-items: center; justify-content: center;
-    z-index: 999;
+.picker-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
 }
 
-.modal-box {
-    background: var(--surface);
-    border-radius: var(--radius);
-    padding: 1.5rem;
-    width: 340px;
-    text-align: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+.picker-head span { font-size: 13px; font-weight: 500; color: var(--text); }
+
+.picker-nav {
+  background: none;
+  border: 0.5px solid var(--border);
+  border-radius: 5px;
+  padding: 3px 9px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text-muted);
 }
 
-.modal-box .plain-input {
-    width: 100%;
-    padding: 9px 12px;
+.picker-nav:hover { background: var(--bg); }
+
+.picker-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 2px;
 }
 
-.modal-box .form-row {
-    gap: 8px;
+.picker-day-label {
+  text-align: center;
+  font-size: 10px;
+  color: var(--text-faint);
+  padding: 3px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
-.modal-box p {
-    font-size: 15px;
-    color: var(--text);
-    margin-bottom: 1.25rem;
+.picker-day {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 5px;
+  background: none;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text);
+  cursor: pointer;
 }
 
-.modal-buttons {
-    display: flex;
-    gap: 10px;
+.picker-day:hover:not(.empty):not(.selected) { background: var(--bg); }
+.picker-day.empty    { cursor: default; }
+.picker-day.today    { font-weight: 500; color: var(--accent); }
+.picker-day.selected { background: var(--accent); color: #fff; }
+
+.picker-day.past {
+  color: var(--text-faint);
+  cursor: default;
+  opacity: 0.4;
 }
 
-.modal-cancel {
-    flex: 1; padding: 9px; border-radius: var(--radius-sm);
-    border: 0.5px solid var(--border-strong); background: none;
-    font-size: 14px; font-family: inherit; cursor: pointer; color: var(--text-muted);
+.picker-hint {
+  font-size: 11px;
+  color: var(--text-faint);
+  text-align: center;
+  margin-top: 8px;
 }
-.modal-cancel:hover { background: var(--bg); }
 
-.modal-confirm {
-    flex: 1; padding: 9px; border-radius: var(--radius-sm);
-    border: none; background: var(--danger);
-    font-size: 14px; font-family: inherit; cursor: pointer; color: white; font-weight: 500;
+.picker-btn-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
 }
-.modal-confirm:hover { background: #8a2424; }
+
+.picker-btn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 5px;
+  border: 0.5px solid var(--border);
+  border-radius: 5px;
+  background: none;
+  font-size: 12px;
+  font-family: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.picker-btn:hover { background: var(--bg); }
 
 /* ─── Media queries ───────────────────────────────────────────────────────── */
 
 @media (max-width: 480px) {
-  .form-row    { grid-template-columns: 1fr; }
-  .cal-day     { min-height: 40px; font-size: 12px; }
-  .booked-label { font-size: 9px; }
+  .picker-dropdown { width: 100%; }
 }

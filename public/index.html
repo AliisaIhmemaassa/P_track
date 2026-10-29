@@ -12,14 +12,16 @@
 </head>
 <body>
     <div class="container" id="app">
+        <div class="top-bar" id="top-bar">
+            <button class="top-btn" id="theme-btn" onclick="toggleTheme()">theme</button>
+        </div>
         <div class="main-page" id="main-page">
             <div class="recent-history" id="recent-history">
                 
             </div> <!-- recent-history -->
-            <div class="add-event" id="add-container">
-                <div id="add-head"></div>
-                <div id="add-input"></div>
-            </div> <!-- add-event -->
+            <div class="add-container" id="add-container">
+
+            </div> <!-- add-container -->
         </div> <!-- main-page -->
 
         <div class="history-page" id="history-page" style="display: none;">
@@ -28,6 +30,8 @@
             </div> <!-- history-list -->
         </div> <!-- history-page -->
     </div> <!-- container -->
+
+    <script src="scripts/mini_calendar.js"></script>
     <script src="scripts/script.js"></script>
 </body>
 </html>

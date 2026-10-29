@@ -1,6 +1,10 @@
 
-let data = []
+
 const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+let data = []
+let assumption = "";
+let inputQ = "";
+let mainPicker;
 
 /* ── Helpers ────────────────────────────────────────────────────────────── */
 function getDay(date) {
@@ -14,17 +18,18 @@ function getYear(date) {
     return parseInt(date.split("-")[0]);
 }
 
-
 /* ── Render Pages ───────────────────────────────────────────────────────── */
 function renderMainPage() {
     renderRecentHistory(data);
-    const div = document.getElementById("add-container");
+    const div_head = document.getElementById("add-container");
 
-    div.innerHTML = `
+    div_head.innerHTML = `
     <h3>Add a date</h3>
+    <input type="text" id="inputF" class="plain-input" readonly>
+    <img src="media/calendar_11.png" class="cal-icon" alt="" aria-hidden="true">
     `;
 }
-//<input type="text" class="plain-input" id="input-event" placeholder="Insert date" maxlength="20">
+
 
 function attachEvents() {
     const input = document.getElementById('input-event');
@@ -40,9 +45,7 @@ function attachEvents() {
     });
 }
 
-function renderDatePrediction() {
 
-}
 
 function onAddClick() {
     
@@ -136,5 +139,11 @@ function loadHistoryPage() {
 /*── Main ───────────────────────────────────────────────────────────────────*/
 (async () => {
     data = await loadJSON();
-    renderRecentHistory(data);
+    renderMainPage();
+    mainPicker = createPicker({
+        wrapId: 'add-container',
+        dropdownId: 'picker-dropdown',
+        inputId: 'inputF',
+        allowPast: true,
+    });
 })();
