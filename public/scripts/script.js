@@ -18,6 +18,7 @@ function getYear(date) {
     return parseInt(date.split("-")[0]);
 }
 
+
 /* ── Render Pages ───────────────────────────────────────────────────────── */
 function renderMainPage() {
     renderRecentHistory(data);
@@ -27,6 +28,7 @@ function renderMainPage() {
     <h3>Add a date</h3>
     <input type="text" id="inputF" class="plain-input" readonly>
     <img src="media/calendar_11.png" class="cal-icon" alt="" aria-hidden="true">
+    <button class="add-btn" id="add-btn" onclick="onAddClick()">Add</button>
     `;
 }
 
@@ -46,11 +48,26 @@ function attachEvents() {
 }
 
 
-
-function onAddClick() {
-    
+async function onAddClick() {
+    const date = mainPicker.value;
+    let newDataPoint = {};
+    if (!data.at(-1)) {
+        newDataPoint = {"id": 1, "date": date, "difference": "N/A"};
+    } else {
+        const prevDataPoint = data.at(-1)
+        newDataPoint = {"id": prevDataPoint.id + 1, "date": date, "difference": calculateDifference(prevDataPoint.date, date)}; 
+    }
+    data.push(newDataPoint);
+    const saved = await saveJSON(data);
 }
 
+function calculateDifference(d1, d2) {
+    const dt1 = new Date(d1); // Older
+    const dt2 = new Date(d2); // Newer
+    const diffMs = dt2 - dt1;
+    const diffD = diffMs / (1000 * 60 * 60 * 24);
+    return diffD
+}
 
 /* ── Render Table ───────────────────────────────────────────────────────── */
 function renderRecentHistory(events) {
@@ -125,14 +142,6 @@ async function saveJSON(newData) {
 
 
 
-/*── HTML elements ──────────────────────────────────────────────────────────*/
-function loadMainPage() {
-
-}
-
-function loadHistoryPage() {
-
-}
 
 
 
