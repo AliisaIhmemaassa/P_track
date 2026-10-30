@@ -66,6 +66,27 @@ async function openFolder() {
 }
 
 async function loadFromFolder() {
+    try {
+        try {
+            fileHandle = await dirHandle.getFileHandle(DATA_FILE);                   // exists?
+            console.log("found existing file");
+        } catch (e) {
+            if (e.name !== "NotFoundError") throw e;
+            fileHandle = await dirHandle.getFileHandle(DATA_FILE, { create: true }); // make it
+            console.log("created new file");
+        }
+
+        const text = await (await fileHandle.getFile()).text();
+        data = text.trim() ? JSON.parse(text) : [];
+        if (!text.trim()) await saveJSON(data);   // writes "[]"
+
+        refreshTables();
+    } catch (error) {
+        console.error("loadFromFolder failed:", error.name, error.message);
+    }
+}
+
+/*async function loadFromFolder() {
     // creates an empty file if it doesn't exist yet
     fileHandle = await dirHandle.getFileHandle(DATA_FILE, { create: true });
     const text = await (await fileHandle.getFile()).text();
@@ -74,7 +95,7 @@ async function loadFromFolder() {
     if (!text.trim()) await saveJSON(data);   // initialise new file with []
 
     refreshTables();
-}
+}*/
 
 async function saveJSON(newData) {
     if (!fileHandle) {
