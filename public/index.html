@@ -12,25 +12,41 @@
 </head>
 <body>
     <div class="container" id="app">
+
         <div class="top-bar" id="top-bar">
-            <button class="top-btn" id="theme-btn" onclick="toggleTheme()">theme</button>
+            <button class="top-btn" id="nav-btn" onclick="toggleHistory()">History</button>
+            <button class="top-btn theme-btn" id="theme-btn" onclick="toggleTheme(this)">Dark</button>
         </div>
+
         <div class="main-page" id="main-page">
-            <div class="recent-history" id="recent-history">
-                
-            </div> <!-- recent-history -->
+            <div class="recent-history" id="recent-history"></div> <!-- recent-history -->
+            
             <div class="add-container" id="add-container">
-                
+                <div id="input-wrap"></div>
             </div> <!-- add-container -->
+
         </div> <!-- main-page -->
 
         <div class="history-page" id="history-page" style="display: none;">
             <div class="history-list" id="history-list">
 
             </div> <!-- history-list -->
+
         </div> <!-- history-page -->
+
+        <div id="confirm-modal" class="modal-overlay" style="display:none;">
+            <div class="modal-box">
+                <p id="modal-message">Delete entry?</p>
+                <div class="modal-buttons">
+                    <button class="modal-cancel" onclick="closeModal()">Cancel</button>
+                    <button class="modal-confirm" onclick="confirmAction()">Delete</button>
+                </div>
+            </div>
+        </div>
+
     </div> <!-- container -->
 
+    <script src="scripts/theme_toggle.js"></script>
     <script src="scripts/mini_calendar.js"></script>
     <script src="scripts/script.js"></script>
 </body>
