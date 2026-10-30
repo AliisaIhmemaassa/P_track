@@ -21,6 +21,7 @@ function getYear(date) {
 
 
 /* ── JSON ───────────────────────────────────────────────────────────────── */
+/* Proxy
 async function loadJSON() {
     try {
         const response = await fetch("/api/data");
@@ -46,6 +47,49 @@ async function saveJSON(newData) {
     } catch (error) {
         console.error("Error saving data:", error);
         return false;
+    }
+}
+*/
+
+// Browser (Chrome, Edge, Opera)
+let fileHandle = null;
+const JSON_TYPES = [{ description: "JSON", accept: { "application/json": [".json"] } }];
+
+// Must be called from a click (browser security rule)
+async function openFile() {
+    try {
+        [fileHandle] = await showOpenFilePicker({ types: JSON_TYPES });
+        const file = await fileHandle.getFile();
+        data = JSON.parse(await file.text());
+        refreshTables();
+    } catch (error) {
+        if (error.name !== "AbortError") console.error("Error opening file:", error);
+    }
+}
+
+async function saveJSON(newData) {
+    try {
+        if (!fileHandle) {
+            fileHandle = await showSaveFilePicker({
+                suggestedName: "p_track_data.json",
+                types: JSON_TYPES,
+            });
+        }
+        const writable = await fileHandle.createWritable();
+        await writable.write(JSON.stringify(newData, null, 2));
+        await writable.close();
+        data = newData;
+        return true;
+    } catch (error) {
+        if (error.name !== "AbortError") console.error("Error saving data:", error);
+        return false;
+    }
+}
+
+function refreshTables() {
+    renderRecentHistory(data);
+    if (document.getElementById("history-page").style.display !== "none") {
+        renderHistoryPage(data);
     }
 }
 
