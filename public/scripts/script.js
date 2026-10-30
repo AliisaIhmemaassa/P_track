@@ -52,40 +52,51 @@ async function saveJSON(newData) {
 */
 
 // Browser (Chrome, Edge, Opera)
+const DATA_FILE = "p_track_data.json";
+let dirHandle = null;
 let fileHandle = null;
-const JSON_TYPES = [{ description: "JSON", accept: { "application/json": [".json"] } }];
 
-// Must be called from a click (browser security rule)
-async function openFile() {
+async function openFolder() {
     try {
-        [fileHandle] = await showOpenFilePicker({ types: JSON_TYPES });
-        const file = await fileHandle.getFile();
-        data = JSON.parse(await file.text());
-        refreshTables();
+        dirHandle = await showDirectoryPicker({ mode: "readwrite" });
+        await loadFromFolder();
     } catch (error) {
-        if (error.name !== "AbortError") console.error("Error opening file:", error);
+        if (error.name !== "AbortError") console.error("Error opening folder:", error);
     }
 }
 
+async function loadFromFolder() {
+    // creates an empty file if it doesn't exist yet
+    fileHandle = await dirHandle.getFileHandle(DATA_FILE, { create: true });
+    const text = await (await fileHandle.getFile()).text();
+
+    data = text.trim() ? JSON.parse(text) : [];
+    if (!text.trim()) await saveJSON(data);   // initialise new file with []
+
+    refreshTables();
+}
+
 async function saveJSON(newData) {
+    if (!fileHandle) {
+        alert("Open a data folder first.");
+        return false;
+    }
     try {
-        if (!fileHandle) {
-            fileHandle = await showSaveFilePicker({
-                suggestedName: "p_track_data.json",
-                types: JSON_TYPES,
-            });
-        }
         const writable = await fileHandle.createWritable();
         await writable.write(JSON.stringify(newData, null, 2));
         await writable.close();
         data = newData;
         return true;
     } catch (error) {
-        if (error.name !== "AbortError") console.error("Error saving data:", error);
+        console.error("Error saving data:", error);
         return false;
     }
 }
 
+async function loadJSON() { return []; }   // real loading happens in openFolder
+
+
+/* ── Render Table ───────────────────────────────────────────────────────── */
 function refreshTables() {
     renderRecentHistory(data);
     if (document.getElementById("history-page").style.display !== "none") {
@@ -93,8 +104,6 @@ function refreshTables() {
     }
 }
 
-
-/* ── Render Table ───────────────────────────────────────────────────────── */
 function renderRecentHistory(events) {
     renderDataTable("recent-history", events.slice(-6));
 }
