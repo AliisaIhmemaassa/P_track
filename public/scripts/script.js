@@ -239,6 +239,7 @@ async function onAddClick() {
         newDataPoint = {"id": prevDataPoint.id + 1, "date": date, "difference": calculateDifference(prevDataPoint.date, date)}; 
     }
     data.push(newDataPoint);
+    data = insertionSort(data);   // sort by date, ascending
     const saved = await saveJSON(data);
     if (saved) {renderRecentHistory(data); mainPicker.clear();}
 
