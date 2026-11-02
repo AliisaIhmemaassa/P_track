@@ -166,12 +166,7 @@ async function confirmAction() {
     if (pendingDeleteId === null) return;
 
     const remaining = data.filter(d => d.id !== pendingDeleteId);
-
-    // "difference" depends on the previous entry, so recompute it
-    const updated = remaining.map((item, i) => ({
-        ...item,
-        difference: i === 0 ? "N/A" : calculateDifference(remaining[i - 1].date, item.date),
-    }));
+    const updated = recomputeDifferences(remaining);
 
     const saved = await saveJSON(updated);   // sets data = updated on success
     closeModal();
@@ -229,19 +224,16 @@ function attachEvents() {
 
 /* ── Main Page ──────────────────────────────────────────────────────────── */
 async function onAddClick() {
+    if (!fileHandle) { alert("Open a data folder first."); return; }
     const date = mainPicker.value;
     if (!date) return;
-    let newDataPoint = {};
-    if (!data.at(-1)) {
-        newDataPoint = {"id": 1, "date": date, "difference": "N/A"};
-    } else {
-        const prevDataPoint = data.at(-1)
-        newDataPoint = {"id": prevDataPoint.id + 1, "date": date, "difference": calculateDifference(prevDataPoint.date, date)}; 
-    }
-    data.push(newDataPoint);
-    data = insertionSort(data);   // sort by date, ascending
-    const saved = await saveJSON(data);
-    if (saved) {renderRecentHistory(data); mainPicker.clear();}
+
+    const nextId = data.reduce((max, d) => Math.max(max, d.id), 0) + 1;
+    const withNew = [...data, { id: nextId, date }];
+
+    const updated = recomputeDifferences(insertionSort(withNew));
+    const saved = await saveJSON(updated);
+    if (saved) { renderRecentHistory(data); mainPicker.clear(); }
 
 }
 
@@ -251,6 +243,13 @@ function calculateDifference(d1, d2) {
     const diffMs = dt2 - dt1;
     const diffD = diffMs / (1000 * 60 * 60 * 24);
     return diffD
+}
+
+function recomputeDifferences(list) {
+    return list.map((item, i) => ({
+        ...item,
+        difference: i === 0 ? "N/A" : calculateDifference(list[i - 1].date, item.date),
+    }));
 }
 
 

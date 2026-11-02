@@ -1,19 +1,17 @@
 
-
-function insertionSort(data) {
-    const a = [...data];
+function insertionSort(list) {
+    const a = [...list];
 
     for (let i = 1; i < a.length; i++) {
-        const [y,m,d] = a[i].date.split("-");
-        const key = parseInt(y+m+d);
+        const item = a[i];
         let j = i - 1;
 
-        while (j >= 0 && a[j] > key) {
+        // ISO dates (YYYY-MM-DD) compare correctly as plain strings
+        while (j >= 0 && a[j].date > item.date) {
             a[j + 1] = a[j];
             j--;
         }
-        a[j + 1] = key;
+        a[j + 1] = item;
     }
-    return a
+    return a;
 }
-
