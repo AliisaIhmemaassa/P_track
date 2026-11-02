@@ -77,12 +77,11 @@ function createPicker(config) {
     });
 
     function open() {
-        console.log('open called');
         input.classList.add('picker-input-active');
-        const base = state.value ? state.value.split('-').map(Number) : null;
+        /*const base = state.value ? state.value.split('-').map(Number) : null;
         const now = new Date();
         state.pickerYear = base ? base[0] : now.getFullYear();
-        state.pickerMonth = base ? base[1] - 1 : now.getMonth();
+        state.pickerMonth = base ? base[1] - 1 : now.getMonth();*/
         dropdown.classList.add('open');
         render();
     }
