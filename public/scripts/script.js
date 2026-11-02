@@ -19,6 +19,20 @@ function getYear(date) {
     return parseInt(date.split("-")[0]);
 }
 
+function calculateDifference(d1, d2) {
+    const dt1 = new Date(d1); // Older
+    const dt2 = new Date(d2); // Newer
+    const diffMs = dt2 - dt1;
+    const diffD = diffMs / (1000 * 60 * 60 * 24);
+    return diffD
+}
+function recomputeDifferences(list) {
+    return list.map((item, i) => ({
+        ...item,
+        difference: i === 0 ? "N/A" : calculateDifference(list[i - 1].date, item.date),
+    }));
+}
+
 
 /* ── JSON ───────────────────────────────────────────────────────────────── */
 /* Proxy
@@ -109,10 +123,6 @@ function renderRecentHistory(events) {
     renderDataTable("recent-history", events.slice(-6));
 }
 
-function renderHistoryPage(events) {
-    renderDataTable("history-list", [...events].reverse());
-}
-
 function renderDataTable(container, events) {
     const div = document.getElementById(container);
 
@@ -200,8 +210,12 @@ function toggleHistory() {
     showPage(onHistory ? 'main' : 'history');
 }
 
+function attachEvents() {
 
-/* ── Render Pages ───────────────────────────────────────────────────────── */
+}
+
+
+/* ── Main Page ──────────────────────────────────────────────────────────── */
 function renderMainPage() {
     renderRecentHistory(data);
     const div_head = document.getElementById("add-container");
@@ -216,13 +230,6 @@ function renderMainPage() {
     `;
 }
 
-
-function attachEvents() {
-
-}
-
-
-/* ── Main Page ──────────────────────────────────────────────────────────── */
 async function onAddClick() {
     if (!fileHandle) { alert("Open a data folder first."); return; }
     const date = mainPicker.value;
@@ -237,24 +244,11 @@ async function onAddClick() {
 
 }
 
-function calculateDifference(d1, d2) {
-    const dt1 = new Date(d1); // Older
-    const dt2 = new Date(d2); // Newer
-    const diffMs = dt2 - dt1;
-    const diffD = diffMs / (1000 * 60 * 60 * 24);
-    return diffD
-}
-
-function recomputeDifferences(list) {
-    return list.map((item, i) => ({
-        ...item,
-        difference: i === 0 ? "N/A" : calculateDifference(list[i - 1].date, item.date),
-    }));
-}
-
 
 /* ── History Page ───────────────────────────────────────────────────────── */
-
+function renderHistoryPage(events) {
+    renderDataTable("history-list", [...events].reverse());
+}
 
 
 /* ── Main ───────────────────────────────────────────────────────────────── */
